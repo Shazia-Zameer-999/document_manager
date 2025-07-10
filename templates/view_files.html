@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}View Files{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>📚 Your Documents</h2>
+
+    <!-- 🔍 Search Bar -->
+    <form action="{{ url_for('search_files') }}" method="get" class="mb-4 d-flex" style="gap: 10px;">
+        <input type="text" name="q" placeholder="Search by file or category" class="form-control" value="{{ search_query if search_query else '' }}">
+        <button type="submit" class="btn btn-primary">🔍 Search</button>
+    </form>
+
+    <!-- 🟢 SEARCH RESULTS -->
+    {% if search_results %}
+        <h4>🔍 Results for "{{ search_query }}"</h4>
+        <ul class="list-group">
+            {% for file, cat in search_results %}
+                <li class="list-group-item d-flex flex-column align-items-start">
+                    <div class="d-flex justify-content-between w-100">
+                        <span><strong>{{ file }}</strong> in <em>{{ cat }}</em></span>
+                        <div class="btn-group">
+                            <a href="{{ url_for('download_file', category=cat, filename=file) }}" class="btn btn-sm btn-success">⬇️ Download</a>
+                            <form action="{{ url_for('delete_file', category=cat, filename=file) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this file?')">🗑 Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- ✏️ Rename Form -->
+                    <form action="{{ url_for('rename_file', category=cat, old_filename=file) }}" method="post" class="d-flex mt-2" style="gap:5px;">
+                        <input type="text" name="new_filename" placeholder="New name" class="form-control form-control-sm" required>
+                        <button type="submit" class="btn btn-sm btn-warning">✏️ Rename</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('view_files') }}" class="btn btn-secondary mt-3">⬅ Back</a>
+
+    <!-- 📂 CATEGORY LIST -->
+    {% elif categories %}
+        <h4>Your Categories:</h4>
+        <ul class="list-group">
+            {% for cat in categories %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ cat[0] }} ({{ cat[1] }} files)
+                    <a href="{{ url_for('view_category_files', category=cat[0]) }}" class="btn btn-sm btn-outline-primary">View Files</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+    <!-- 📄 FILE LIST IN CATEGORY -->
+    {% elif files %}
+        <h4>Files in "{{ category }}"</h4>
+        <ul class="list-group">
+            {% for file in files %}
+                <li class="list-group-item d-flex flex-column align-items-start">
+                    <div class="d-flex justify-content-between w-100">
+                        {{ file }}
+                        <div class="btn-group">
+                            <a href="{{ url_for('preview_file', category=category, filename=file) }}" class="btn btn-sm btn-info">👁 Preview</a>
+                            <a href="{{ url_for('download_file', category=category, filename=file) }}" class="btn btn-sm btn-success">⬇️ Download</a>
+                            <form action="{{ url_for('delete_file', category=category, filename=file) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this file?')">🗑 Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- ✏️ Rename Form -->
+                    <form action="{{ url_for('rename_file', category=category, old_filename=file) }}" method="post" class="d-flex mt-2" style="gap:5px;">
+                        <input type="text" name="new_filename" placeholder="New name" class="form-control form-control-sm" required>
+                        <button type="submit" class="btn btn-sm btn-warning">✏️ Rename</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('view_files') }}" class="btn btn-secondary mt-3">⬅ Back to Categories</a>
+
+    {% else %}
+        <p class="text-muted">No files or categories found.</p>
+    {% endif %}
+</div>
+<br>
+<div class="d-flex justify-content-center mt-3">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">⬅ Back to Home Page</a>
+</div>
+{% endblock %}

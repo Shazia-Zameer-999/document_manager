@@ -1,0 +1,2 @@
+Hello this is my first gui project of Notepad.
+ks

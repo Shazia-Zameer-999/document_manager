@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Profile Settings</h2>
+
+  {% if editing %}
+    <!-- Editable Form -->
+    <form method="POST">
+        <div class="mb-3">
+            <label>Username:</label>
+            <input type="text" name="username" class="form-control" value="{{ user[1] }}" required>
+        </div>
+        <div class="mb-3">
+            <label>Email:</label>
+            <input type="email" name="email" class="form-control" value="{{ user[4] }}" required>
+        </div>
+        <div class="mb-3">
+            <label>New Password:</label>
+            <input type="password" name="password" class="form-control" placeholder="Leave blank to keep old">
+        </div>
+        <button type="submit" class="btn btn-success">✅ Update Profile</button>
+        <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+
+  {% else %}
+    <!-- Read-Only View -->
+    <p><strong>Username:</strong> {{ user[1] }}</p>
+    <p><strong>Email:</strong> {{ user[4] }}</p>
+    <a href="{{ url_for('profile', edit='true') }}" class="btn btn-primary">✏️ Edit Profile</a>
+    <div class="d-flex justify-content-center mt-3">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">⬅ Back </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

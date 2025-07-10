@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Document{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">📤 Upload a Document</h2>
+    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        <div class="mb-3">
+            <label for="file" class="form-label">Choose File or Drag it Below</label>
+
+            <!-- 🔘 File Input (Hidden but still used for form submission) -->
+            <input type="file" name="file" id="fileInput" class="form-control d-none" required>
+
+            <!-- 📦 Drag & Drop Box -->
+            <div id="dropArea" class="border border-secondary rounded p-5 text-center" style="cursor: pointer;">
+            <p class="mb-0">📂 Drag and drop a file here<br><small>or click to choose file</small></p>
+            </div>
+
+            <!-- 👀 Show selected file name -->
+            <p id="fileName" class="mt-2 text-success fw-semibold"></p>
+        </div>
+
+        <div class="mb-3">
+            <label for="category" class="form-label">Enter Category (e.g. medical, school)</label>
+            <input type="text" name="category" list="categorySuggestions" class="form-control" required>
+
+            <datalist id="categorySuggestions">
+            <option value="medical">
+            <option value="school">
+            <option value="bank">
+            <option value="insurance">
+            <option value="travel">
+            <option value="work">
+            <option value="personal">
+            <option value="receipts">
+            <option value="identity">
+            <option value="legal">
+            </datalist>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Upload</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary ms-2">Back</a>
+        </form>
+</div>
+
+<script>
+  const dropArea = document.getElementById("dropArea");
+  const fileInput = document.getElementById("fileInput");
+  const fileNameDisplay = document.getElementById("fileName");
+
+  // 🔄 Clicking the box opens file picker
+  dropArea.addEventListener("click", () => fileInput.click());
+
+  // 🔃 Drag events
+  dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropArea.classList.add("bg-light");
+  });
+
+  dropArea.addEventListener("dragleave", () => {
+    dropArea.classList.remove("bg-light");
+  });
+
+  dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropArea.classList.remove("bg-light");
+
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      fileInput.files = e.dataTransfer.files; // sets file for form
+      fileNameDisplay.textContent = `📎 ${file.name}`;
+    }
+  });
+
+  // 👀 Show file name if selected by clicking
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (file) {
+      fileNameDisplay.textContent = `📎 ${file.name}`;
+    }
+  });
+</script>
+{% endblock %}

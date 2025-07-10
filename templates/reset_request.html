@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Reset Password{% endblock %}
+
+{% block content %}
+<style>
+  .card {
+    max-width: 450px;
+    margin: 5% auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+</style>
+
+<div class="card">
+  <h4 class="text-center mb-4">🔐 Password Reset</h4>
+
+  <form method="POST">
+    <!-- reset_request.html -->
+    <div class="form-group mb-3">
+      <label>Enter your registered email</label>
+      <input type="email" name="email" class="form-control" required value="{{ email }}" readonly>
+    </div>
+    <button class="btn btn-primary w-100">Send Reset Link</button>
+  </form>
+</div>
+<div class="d-flex justify-content-center mt-3">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">⬅ Back to Home Page</a>
+</div>
+{% endblock %}
